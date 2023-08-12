@@ -1,3 +1,5 @@
+@import "../../media-mixin";
+
 .display {
   display: flex;
   justify-content: center;
@@ -13,6 +15,10 @@
 
   font-weight: 300;
   font-size: 64px;
+
+  @include mq('custom', 'min', 550) {
+    font-size: 90px;
+  }
 
   &__dotes {
     margin-top: -10px;

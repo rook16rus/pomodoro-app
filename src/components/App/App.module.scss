@@ -1,3 +1,5 @@
+@import "../../media-mixin";
+
 .pomodoro {
   display: flex;
   flex-direction: column;
@@ -10,5 +12,9 @@
 
   &__status {
     font-size: 32px;
+
+    @include mq('custom', 'min', 550) {
+      font-size: 50px;
+    }
   }
 }

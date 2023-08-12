@@ -1,3 +1,5 @@
+@import "../../media-mixin";
+
 .controls {
   display: flex;
   align-items: center;
@@ -5,6 +7,10 @@
   gap: 20px;
   width: 170px;
   margin: 0 auto 40px;
+
+  @include mq('custom', 'min', 550) {
+    width: 210px;
+  }
 
   &__play {
     display: flex;
@@ -16,10 +22,20 @@
 
     border-radius: 50%;
     background-color: #fff;
+
+    @include mq('custom', 'min', 550) {
+      width: 90px;
+      height: 90px;
+    }
     
     svg {
       width: 28px;
       height: 28px;
+
+      @include mq('custom', 'min', 550) {
+        width: 40px;
+        height: 40px;
+      }
     }
   }
 
@@ -27,6 +43,11 @@
     svg {
       width: 34px;
       height: 34px;
+
+      @include mq('custom', 'min', 550) {
+        width: 40px;
+        height: 40px;
+      }
     }
   }
 }
