@@ -1,7 +1,14 @@
 .cycles {
-
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 100px;
 
   &__dote {
+    width: 24px;
+    height: 24px;
 
+    border: 2px solid #fff;
+    border-radius: 50%;
   }
 }

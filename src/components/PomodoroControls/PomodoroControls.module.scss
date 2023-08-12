@@ -1,11 +1,32 @@
 .controls {
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 170px;
+  margin: 0 auto 40px;
 
   &__play {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    margin-left: auto;
 
+    border-radius: 50%;
+    background-color: #fff;
+    
+    svg {
+      width: 28px;
+      height: 28px;
+    }
   }
 
   &__next {
-
+    svg {
+      width: 34px;
+      height: 34px;
+    }
   }
 }
