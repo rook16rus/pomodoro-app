@@ -1,11 +1,18 @@
+import { convertDigit } from "../../functions/functions";
+
 import styles from "./PomodoroDispaly.module.scss"
 
-const PomodoroDisplay = () => {
+type PomodoroDisplayProps = {
+    minutes: number,
+    seconds: number
+}
+
+const PomodoroDisplay = ({minutes, seconds}: PomodoroDisplayProps) => {
     return (
         <div className={styles.display}>
-            <span className={styles.display__minutes}>25</span>
+            <span className={styles.display__minutes}>{convertDigit(minutes)}</span>
             <span className={styles.display__dotes}>:</span>
-            <span className={styles.display__minutes}>00</span>
+            <span className={styles.display__minutes}>{convertDigit(seconds)}</span>
         </div>
     )
 }

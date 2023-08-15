@@ -10,5 +10,9 @@
 
     border: 2px solid #fff;
     border-radius: 50%;
+    
+    &.active {
+      background-color: #fff;
+    }
   }
 }
