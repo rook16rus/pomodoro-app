@@ -11,6 +11,14 @@
   @include mq('custom', 'min', 550) {
     width: 210px;
   }
+  
+  &.break .controls__play svg{
+      color: #38858A;
+  }
+
+  &.long-break .controls__play svg{
+    color: #397097;
+  }
 
   &__play {
     display: flex;

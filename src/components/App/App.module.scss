@@ -9,6 +9,14 @@
   height: 100vh;
 
   background-color: #BA4949;
+  
+  &.break {
+    background-color: #38858A;
+  }
+
+  &.long-break {
+    background-color: #397097;
+  }
 
   &__status {
     font-size: 32px;
