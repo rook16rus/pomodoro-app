@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import classNames from "classnames";
 
 import PomodoroDisplay from "../PomodoroDisplay/PomodoroDisplay";
@@ -20,47 +20,95 @@ function App() {
     const [cycleCount, setCycleCount] = useState<number>(0);
 
     let intervalRef = useRef<null | NodeJS.Timeout>(null);
+    let totalSeconds = !isRunningTimer ? minutes * 60 + seconds : currentTime;
 
-    const onTogglePlay = (): void => {
-        let totalSeconds = !isRunningTimer ? minutes * 60 + seconds : currentTime;
+    useEffect(() => {
+        clearInterval(intervalRef.current as NodeJS.Timeout);
 
+        console.log(1)
         if (isActive) {
-            clearInterval(intervalRef.current as NodeJS.Timeout)
-        } else {
-            intervalRef.current = setInterval(run, 1000)
-        }
+            intervalRef.current = setInterval(() => {
+                totalSeconds--;
 
-        function run() {
-            totalSeconds--;
-
-            if (totalSeconds < 0) {
-                if (status === 'action') setCycleCount(count => count + 1);
-
-                setMinutes(0);
-                setSeconds(5);
-                setStatus("break");
-                totalSeconds = 5;
-
-                clearInterval(intervalRef.current as NodeJS.Timeout)
-                intervalRef.current = setInterval(run, 1000)
-            } else {
                 const seconds = totalSeconds % 60;
                 const minutes = Math.floor(totalSeconds / 60);
 
-                setSeconds(seconds);
-                setMinutes(minutes)
-            }
+                if (totalSeconds < 0) {
+                    switch (status) {
+                        case "action":
+                            if (cycleCount === 3) {
+                                setMinutes(10);
+                                setSeconds(0);
+                                totalSeconds = 10 * 60;
+                                setStatus("longBreak");
+                            } else {
+                                setMinutes(5);
+                                setSeconds(0);
+                                totalSeconds = 5 * 60;
+                                setStatus("break");
+                            }
+                            setCycleCount(count => count + 1);
+                            break;
+                        case "break":
+                            setStatus("action");
+                            setMinutes(25);
+                            setSeconds(0);
+                            totalSeconds = 25 * 60;
+                            break;
+                        case "longBreak":
+                            setStatus("action");
+                            setMinutes(25);
+                            setSeconds(0);
+                            totalSeconds = 25 * 60;
+                            setCycleCount(0);
+                            break
+                    }
+                } else {
+                    setSeconds(seconds);
+                    setMinutes(minutes)
+                }
 
-            setCurrentTime(totalSeconds);
+                setCurrentTime(totalSeconds);
+            }, 1000);
+            setIsRunningTimer(true);
         }
+    }, [isActive, status])
 
-        setIsRunningTimer(true);
+    const onTogglePlay = (): void => {
         setIsActive(isActive => !isActive);
     }
 
-
     const onNext = (): void => {
-
+        switch (status) {
+            case "action":
+                if (cycleCount === 3) {
+                    setMinutes(10);
+                    setSeconds(0);
+                    totalSeconds = 10 * 60;
+                    setStatus("longBreak");
+                } else {
+                    setMinutes(5);
+                    setSeconds(0);
+                    totalSeconds = 5 * 60;
+                    setStatus("break");
+                }
+                setCycleCount(count => count + 1);
+                break;
+            case "break":
+                setStatus("action");
+                setMinutes(25);
+                setSeconds(0);
+                totalSeconds = 25 * 60;
+                break;
+            case "longBreak":
+                setStatus("action");
+                setMinutes(25);
+                setSeconds(0);
+                totalSeconds = 25 * 60;
+                setCycleCount(0);
+                break
+        }
+        setCurrentTime(totalSeconds);
     }
 
     const statusText: string =  status === "action" ?
