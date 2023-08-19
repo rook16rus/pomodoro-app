@@ -25,7 +25,6 @@ function App() {
     useEffect(() => {
         clearInterval(intervalRef.current as NodeJS.Timeout);
 
-        console.log(1)
         if (isActive) {
             intervalRef.current = setInterval(() => {
                 totalSeconds--;
