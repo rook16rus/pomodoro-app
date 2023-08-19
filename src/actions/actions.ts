@@ -14,6 +14,13 @@ export const setMinutes = (number: number): TimerActionTypes => {
     }
 }
 
+export const setCurrentTime = (number: number): TimerActionTypes => {
+    return {
+        type: "SET_CURRENT_TIME",
+        payload: number
+    }
+}
+
 export const toggleActiveTimer = (isActive: boolean): TimerActionTypes => {
     return {
         type: "TOGGLE_ACTIVE",
@@ -28,3 +35,16 @@ export const toggleRunningTimer = (isRunning: boolean): TimerActionTypes => {
     }
 }
 
+export const setStatus = (status: string): TimerActionTypes => {
+    return {
+        type: "SET_STATUS",
+        payload: status
+    }
+}
+
+export const setCycleCount = (count: number): TimerActionTypes => {
+    return {
+        type: "SET_CYCLE_COUNT",
+        payload: count
+    }
+}

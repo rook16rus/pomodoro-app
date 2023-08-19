@@ -22,6 +22,11 @@ const reducer = (state = initialState, action: TAction): TInitialState => {
                 ...state,
                 minutes: action.payload
             }
+        case "SET_CURRENT_TIME":
+            return {
+                ...state,
+                currentTime: action.payload
+            }
         case "TOGGLE_ACTIVE":
             return {
                 ...state,
@@ -31,6 +36,16 @@ const reducer = (state = initialState, action: TAction): TInitialState => {
             return {
                 ...state,
                 isRunning: action.payload
+            }
+        case "SET_STATUS":
+            return {
+                ...state,
+                status: action.payload
+            }
+        case "SET_CYCLE_COUNT":
+            return {
+                ...state,
+                cycleCount: action.payload
             }
         default:
             return state
