@@ -1,12 +1,13 @@
 import classNames from "classnames";
+import {useSelector} from "react-redux";
+
+import {TInitialState} from "../../types/types";
 
 import styles from './PomodoroCycles.module.scss'
 
-type PomodoroCyclesProps = {
-    cycleCount: number
-}
+const PomodoroCycles = () => {
+    const cycleCount = useSelector((state: TInitialState) => state.cycleCount)
 
-const PomodoroCycles = ({cycleCount}: PomodoroCyclesProps) => {
     const dotsArray = Array(4).fill(0).map((item, index: number): React.ReactNode => {
         const clazz = classNames(styles.cycles__dote, {[styles.active]: cycleCount > index})
 
