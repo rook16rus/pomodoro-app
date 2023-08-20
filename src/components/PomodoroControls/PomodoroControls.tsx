@@ -2,10 +2,14 @@ import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import classNames from "classnames";
 
-import { setCurrentTime, setCycleCount, setMinutes, setSeconds, setStatus, toggleActiveTimer, toggleRunningTimer } from "../../actions/actions";
+import { setCurrentTime, setMinutes, setSeconds, toggleActiveTimer, toggleRunningTimer } from "../../actions/actions";
 import { TInitialState } from "../../types/types";
+import { switchStatus } from "../../functions/functions";
 
 import styles from './PomodoroControls.module.scss'
+
+import {ReactComponent as PauseIcon} from "./pause-icon.svg";
+import {ReactComponent as PlayIcon} from "./play-icon.svg";
 
 const PomodoroControls = () => {
     const minutes = useSelector((state: TInitialState) => state.minutes)
@@ -32,35 +36,7 @@ const PomodoroControls = () => {
                 const minutes = Math.floor(totalSeconds / 60);
 
                 if (totalSeconds < 0) {
-                    switch (status) {
-                        case "action":
-                            if (cycleCount === 3) {
-                                dispatch(setMinutes(10));
-                                dispatch(setSeconds(0));
-                                totalSeconds = 10 * 60;
-                                dispatch(setStatus("longBreak"))
-                            } else {
-                                dispatch(setMinutes(5));
-                                dispatch(setSeconds(0));
-                                totalSeconds = 5 * 60;
-                                dispatch(setStatus("break"))
-                            }
-                            dispatch(setCycleCount(cycleCount + 1))
-                            break;
-                        case "break":
-                            dispatch(setStatus("action"))
-                            dispatch(setMinutes(25));
-                            dispatch(setSeconds(0));
-                            totalSeconds = 25 * 60;
-                            break;
-                        case "longBreak":
-                            dispatch(setStatus("action"))
-                            dispatch(setMinutes(25));
-                            dispatch(setSeconds(0));
-                            totalSeconds = 25 * 60;
-                            dispatch(setCycleCount(0))
-                            break
-                    }
+                    totalSeconds = switchStatus(status, cycleCount, totalSeconds, dispatch)
                 } else {
                     dispatch(setMinutes(minutes));
                     dispatch(setSeconds(seconds));
@@ -77,65 +53,11 @@ const PomodoroControls = () => {
     }
 
     const onNext = (): void => {
-        switch (status) {
-            case "action":
-                if (cycleCount === 3) {
-                    dispatch(setMinutes(10));
-                    dispatch(setSeconds(0));
-                    totalSeconds = 10 * 60;
-                    dispatch(setStatus("longBreak"))
-                } else {
-                    dispatch(setMinutes(5));
-                    dispatch(setSeconds(0));
-                    totalSeconds = 5 * 60;
-                    dispatch(setStatus("break"))
-                }
-                dispatch(setCycleCount(cycleCount + 1))
-                break;
-            case "break":
-                dispatch(setStatus("action"))
-                dispatch(setMinutes(25));
-                dispatch(setSeconds(0));
-                totalSeconds = 25 * 60;
-                break;
-            case "longBreak":
-                dispatch(setStatus("action"))
-                dispatch(setMinutes(25));
-                dispatch(setSeconds(0));
-                totalSeconds = 25 * 60;
-                dispatch(setCycleCount(0))
-                break
-        }
+        totalSeconds = switchStatus(status, cycleCount, totalSeconds, dispatch)
         dispatch(setCurrentTime(totalSeconds))
     }
 
-    const playButtonSvg =
-        isActive ?
-        (
-            <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clipPath="url(#clip0_313_3)">
-                    <path d="M24 2.9474V24C24 24.5584 23.7893 25.0939 23.4142 25.4887C23.0391 25.8835 22.5304 26.1053 22 26.1053H17.5C16.9696 26.1053 16.4609 25.8835 16.0858 25.4887C15.7107 25.0939 15.5 24.5584 15.5 24V2.9474C15.5 2.38905 15.7107 1.85356 16.0858 1.45875C16.4609 1.06394 16.9696 0.842133 17.5 0.842133H22C22.5304 0.842133 23.0391 1.06394 23.4142 1.45875C23.7893 1.85356 24 2.38905 24 2.9474ZM8.5 0.842133H4C3.46957 0.842133 2.96086 1.06394 2.58579 1.45875C2.21071 1.85356 2 2.38905 2 2.9474V24C2 24.5584 2.21071 25.0939 2.58579 25.4887C2.96086 25.8835 3.46957 26.1053 4 26.1053H8.5C9.03043 26.1053 9.53914 25.8835 9.91421 25.4887C10.2893 25.0939 10.5 24.5584 10.5 24V2.9474C10.5 2.38905 10.2893 1.85356 9.91421 1.45875C9.53914 1.06394 9.03043 0.842133 8.5 0.842133Z" fill="currentColor"/>
-                </g>
-                <defs>
-                    <clipPath id="clip0_313_3">
-                        <rect width="26" height="26" fill="white"/>
-                    </clipPath>
-                </defs>
-            </svg>
-
-        ):
-        (
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clipPath="url(#clip0_313_2)">
-                    <path d="M27.0375 12.671L9.03751 1.10524C8.73768 0.905239 8.39141 0.795783 8.03651 0.788821C7.68161 0.78186 7.33171 0.877662 7.02501 1.06577C6.71377 1.24551 6.45432 1.51024 6.27394 1.8321C6.09356 2.15395 5.99893 2.52103 6.00001 2.89472V26.0526C5.99893 26.4263 6.09356 26.7934 6.27394 27.1152C6.45432 27.4371 6.71377 27.7018 7.02501 27.8816C7.33171 28.0697 7.68161 28.1655 8.03651 28.1585C8.39141 28.1515 8.73768 28.0421 9.03751 27.8421L27.0375 16.2763C27.3325 16.0889 27.5766 15.8245 27.746 15.5087C27.9154 15.1929 28.0044 14.8364 28.0044 14.4737C28.0044 14.111 27.9154 13.7544 27.746 13.4386C27.5766 13.1228 27.3325 12.8584 27.0375 12.671Z" fill="currentColor"/>
-                </g>
-                <defs>
-                    <clipPath id="clip0_313_2">
-                        <rect width="28" height="28" fill="white"/>
-                    </clipPath>
-                </defs>
-            </svg>
-        )
+    const playButtonSvg = isActive ? <PauseIcon /> : <PlayIcon />
 
     const clazz = classNames(
         styles.controls,
